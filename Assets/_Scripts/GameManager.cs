@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour
         if (_clothesIndex == clothesList.Count) _clothesIndex = 0;
     }
 
+    public void DressOutfitAtIndex(int outfitIndex)
+    {
+        for (int i = 0; i < characterClothRenderer.Length; ++i)
+        {
+            characterClothRenderer[i].sprite = clothesList[outfitIndex].clothSprites[i];
+        }
+    }
+
     public void ButtonPressed()
     {
         Debug.Log(GreenConsole("UI Button Pressed!"));
