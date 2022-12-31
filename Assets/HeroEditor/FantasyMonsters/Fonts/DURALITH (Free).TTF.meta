@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: ef4560002f773a24caacdf8d5bf9afa0
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Duralith
+  fontNames:
+  - Duralith
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 5a010335f7d346cdbc39727ed418bb34, type: 3}
+  - {fileID: 12800000, guid: b3094046c8a6e1d48a23719fec1d79cd, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
