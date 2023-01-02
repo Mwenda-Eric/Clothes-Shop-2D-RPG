@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public CinemachineVirtualCamera cameraPlayer, cameraOutfit;
 
     private PlayerController _playerController;
+    private ShopkeeperScript _shopkeeper;
 
     //Use the Singleton pattern for this GameManager.
     private void Awake()
@@ -34,12 +35,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _playerController = FindObjectOfType<PlayerController>();
+        _shopkeeper = FindObjectOfType<ShopkeeperScript>();
     }
 
     public void EnableOutfitSelectionPanel()
     {
         isOutfitPanelActive = true;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
+        //_shopkeeper.gameObject.SetActive(false);
         //Set the zoom camera.
         cameraPlayer.Priority = cameraOutfit.Priority - 1;
         _playerController.LockMovement();
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         isOutfitPanelActive = false;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
+        //_shopkeeper.gameObject.SetActive(true);
         cameraPlayer.Priority = cameraOutfit.Priority + 1;
         _playerController.UnlockMovement();
     }
