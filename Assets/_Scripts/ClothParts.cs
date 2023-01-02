@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class ClothParts
@@ -9,5 +10,6 @@ public class ClothParts
     public float clothPlayerHealth;
     public float clothSwordDamage;
     public float clothPrice;
+    public Sprite clothImage;
     public Sprite[] clothSprites;//All the different sprites making up the outfit.
 }

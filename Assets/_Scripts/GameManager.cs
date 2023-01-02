@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -12,8 +14,15 @@ public class GameManager : MonoBehaviour
     public List<ClothParts> clothesList;
     private int _clothesIndex;
     
-    public GameObject outfitSelectionPanel;
+    //Outfit Panel UI Elements.
+    public GameObject outfitSelectionPanel, attributesPanel;
+    public TextMeshProUGUI outfitNameText, outfitPriceText, outfitHealthText, outfitSwordDamageText;
+    public TextMeshProUGUI outfitPanelInfoDisplay;
+    private int _outfitSelectedIndex;
+    public Image outfitImageDisplay;
     public bool isOutfitPanelActive;
+    
+    
     
     //Cinemachine Cameras.
     public CinemachineVirtualCamera cameraPlayer, cameraOutfit;
@@ -69,9 +78,24 @@ public class GameManager : MonoBehaviour
 
     public void DressOutfitAtIndex(int outfitIndex)
     {
+        //Set respective texts to the attributes display for this selected outfit.
+        outfitNameText.text = clothesList[outfitIndex].clothName;
+        outfitImageDisplay.sprite = clothesList[outfitIndex].clothImage;
+        outfitPriceText.text = clothesList[outfitIndex].clothPrice.ToString();
+        outfitHealthText.text = "TOTAL HEALTH\n" + clothesList[outfitIndex].clothPlayerHealth;
+        outfitSwordDamageText.text = "SWORD DAMAGE\n" + clothesList[outfitIndex].clothSwordDamage;
+        _outfitSelectedIndex = outfitIndex;
+    }
+
+    public void BuyTheOutfit()
+    {
+        Debug.Log("Check if we have enough coins though.");
+        outfitPanelInfoDisplay.color = Color.green;
+        outfitPanelInfoDisplay.text = "Successfully Bought " + clothesList[_outfitSelectedIndex].clothName; 
+        //This will Dress the character with cloth sprites at selected Index.
         for (int i = 0; i < characterClothRenderer.Length; ++i)
         {
-            characterClothRenderer[i].sprite = clothesList[outfitIndex].clothSprites[i];
+            characterClothRenderer[i].sprite = clothesList[_outfitSelectedIndex].clothSprites[i];
         }
     }
 
