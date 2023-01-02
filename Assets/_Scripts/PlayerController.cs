@@ -89,6 +89,8 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    public Transform PlayerTransform => _playerTransform;
+
     //Functions called from Attack animation Events on first and last keyframes.
     public void LockMovement()
     {

@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 4305108561794920}
   - component: {fileID: 7876075803206398876}
   - component: {fileID: 2605143063198078936}
+  - component: {fileID: 1472581135}
   m_Layer: 0
   m_Name: Shopkeeper
   m_TagString: Player
@@ -492,7 +493,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.07066149}
+  m_Offset: {x: 0, y: -0.015940905}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -503,8 +504,20 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.5289253}
+  m_Size: {x: 4.1526413, y: 3.9930263}
   m_EdgeRadius: 0
+--- !u!114 &1472581135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109986072035710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e14625aa85074e86b6a6ecf81787daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1142964533132318
 GameObject:
   m_ObjectHideFlags: 0
