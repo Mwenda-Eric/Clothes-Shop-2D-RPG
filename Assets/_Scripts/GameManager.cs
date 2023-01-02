@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] characterClothRenderer;
     public List<ClothParts> clothesList;
     private int _clothesIndex;
+    private int _playerCoins;
     
     //Outfit Panel UI Elements.
     public GameObject outfitSelectionPanel, attributesPanel;
@@ -21,8 +22,6 @@ public class GameManager : MonoBehaviour
     private int _outfitSelectedIndex;
     public Image outfitImageDisplay;
     public bool isOutfitPanelActive;
-    
-    
     
     //Cinemachine Cameras.
     public CinemachineVirtualCamera cameraPlayer, cameraOutfit;
@@ -45,6 +44,15 @@ public class GameManager : MonoBehaviour
     {
         _playerController = FindObjectOfType<PlayerController>();
         _shopkeeper = FindObjectOfType<ShopkeeperScript>();
+    }
+
+    public void AddPlayerCoins(int numberOfCoins)
+    {
+        _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
+        _playerCoins += numberOfCoins;
+        PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
+        
+        Debug.Log(GreenConsole("Coins Added! Total = " + _playerCoins));
     }
 
     public void EnableOutfitSelectionPanel()

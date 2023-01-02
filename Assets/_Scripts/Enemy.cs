@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     private float _playerDistance;
     private float _enemyDamage = 10f;
     private float _knockBackForce = 5f;
+
+    public GameObject chest;
     
     #region Animator Hashes
     private static readonly int SlimeDeathTrigger = Animator.StringToHash("SlimeDeath");
@@ -76,17 +78,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void ReceiveKnockBack()
-    {
-    }
-
     public void TakeDamage(float damageAmount)
     {
         EnemyHealth -= damageAmount;
     }
+
+    private void SpawnInChest()
+    {
+        //Instantiate the chest that will give the player coins to buy outfits.
+        Instantiate(chest, transform.position, Quaternion.identity);
+    }
     private void EnemyDefeated()
     {
         _enemyAnimator.SetTrigger(SlimeDeathTrigger);
+        SpawnInChest();
     }
 
     public void DestroyEnemy()
