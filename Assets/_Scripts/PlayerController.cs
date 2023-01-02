@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviour
     
     void OnFire()
     {
+        if (GameManager.Instance.isOutfitPanelActive) return;
         playerAnimator.Play(SwordAttackAnimationId);
     }
 

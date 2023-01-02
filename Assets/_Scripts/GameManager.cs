@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,8 +14,13 @@ public class GameManager : MonoBehaviour
     
     public GameObject outfitSelectionPanel;
     public bool isOutfitPanelActive;
+    
+    //Cinemachine Cameras.
+    public CinemachineVirtualCamera cameraPlayer, cameraOutfit;
 
-    //Use the Singleton pattern for the GameManager.
+    private PlayerController _playerController;
+
+    //Use the Singleton pattern for this GameManager.
     private void Awake()
     {
         if (Instance == null)
@@ -25,10 +31,26 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
+    private void Start()
+    {
+        _playerController = FindObjectOfType<PlayerController>();
+    }
+
     public void EnableOutfitSelectionPanel()
     {
-        outfitSelectionPanel.SetActive(!isOutfitPanelActive);
+        isOutfitPanelActive = true;
+        outfitSelectionPanel.SetActive(isOutfitPanelActive);
+        //Set the zoom camera.
+        cameraPlayer.Priority = cameraOutfit.Priority - 1;
+        _playerController.LockMovement();
+    }
+
+    public void DisableOutfitSelectionPanel()
+    {
         isOutfitPanelActive = false;
+        outfitSelectionPanel.SetActive(isOutfitPanelActive);
+        cameraPlayer.Priority = cameraOutfit.Priority + 1;
+        _playerController.UnlockMovement();
     }
     public void ChangeNextOutfit()
     {
@@ -37,8 +59,6 @@ public class GameManager : MonoBehaviour
             characterClothRenderer[i].sprite = clothesList[_clothesIndex].clothSprites[i];
         }
         
-        //Debug.Log(GreenConsole("We are Wearing : " + clothesList[_clothesIndex].clothName));
-
         ++_clothesIndex;
         if (_clothesIndex == clothesList.Count) _clothesIndex = 0;
     }

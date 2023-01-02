@@ -32,7 +32,6 @@ public class ShopkeeperScript : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             GameManager.Instance.EnableOutfitSelectionPanel();
-            _playerController.LockMovement();
         }
     }
 }
