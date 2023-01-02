@@ -67,7 +67,6 @@ public class Enemy : MonoBehaviour
             Debug.Log(GameManager.RedConsole("Player Health = " + _player.PlayerHealth));
             
         }
-
         if (col.CompareTag("Sword"))
         {
             //Receive KnockBack when player attacks.

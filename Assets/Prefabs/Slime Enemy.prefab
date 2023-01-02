@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f327550d70e345c3af386ec84165a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chest: {fileID: 33161259163879428, guid: 0da0f4e216971469db35dc95fe1f3d13, type: 3}
 --- !u!70 &3909018691030181745
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

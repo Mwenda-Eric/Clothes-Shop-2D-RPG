@@ -11,7 +11,7 @@ public class Chest : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             GameManager.Instance.AddPlayerCoins(ChestCoinAmount);
-            
+            //Destroy(gameObject);
         }
     }
 }
