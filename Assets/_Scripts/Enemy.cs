@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _enemyAnimator = GetComponent<Animator>();
-        int[] randomAnimationId = { SlimeIdleHash, SlimeJumpFarHash, SlimeJumpFarHash, SlimeUpAndDownHash };
+        int[] randomAnimationId = { SlimeIdleHash, SlimeJumpFarHash, SlimeJumpFarHash, SlimeUpAndDownHash, SlimeJumpLowHash };
         _enemyAnimator.Play(randomAnimationId[Random.Range(0, randomAnimationId.Length)]);
     }
 
