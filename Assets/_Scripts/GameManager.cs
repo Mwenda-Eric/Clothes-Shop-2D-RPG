@@ -10,7 +10,11 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] characterClothRenderer;
     public List<ClothParts> clothesList;
     private int _clothesIndex;
+    
+    public GameObject outfitSelectionPanel;
+    public bool isOutfitPanelActive;
 
+    //Use the Singleton pattern for the GameManager.
     private void Awake()
     {
         if (Instance == null)
@@ -21,6 +25,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
+    public void EnableOutfitSelectionPanel()
+    {
+        outfitSelectionPanel.SetActive(!isOutfitPanelActive);
+        isOutfitPanelActive = false;
+    }
     public void ChangeNextOutfit()
     {
         for (int i = 0; i < characterClothRenderer.Length; ++i)

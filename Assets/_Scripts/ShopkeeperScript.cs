@@ -27,8 +27,12 @@ public class ShopkeeperScript : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Collided with " + col.transform.name);
+        if (col.CompareTag("Player"))
+        {
+            GameManager.Instance.EnableOutfitSelectionPanel();
+            _playerController.LockMovement();
+        }
     }
 }
