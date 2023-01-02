@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
         outfitHealthText.text = "TOTAL HEALTH\n" + clothesList[outfitIndex].clothPlayerHealth;
         outfitSwordDamageText.text = "SWORD DAMAGE\n" + clothesList[outfitIndex].clothSwordDamage;
         _outfitSelectedIndex = outfitIndex;
+        DressCharacterSelectedOutfit();
     }
 
     public void BuyTheOutfit()
@@ -92,6 +93,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("Check if we have enough coins though.");
         outfitPanelInfoDisplay.color = Color.green;
         outfitPanelInfoDisplay.text = "Successfully Bought " + clothesList[_outfitSelectedIndex].clothName; 
+        DressCharacterSelectedOutfit();
+    }
+
+    private void DressCharacterSelectedOutfit()
+    {
         //This will Dress the character with cloth sprites at selected Index.
         for (int i = 0; i < characterClothRenderer.Length; ++i)
         {
@@ -106,4 +112,5 @@ public class GameManager : MonoBehaviour
     
     //Turn Debug Message to green. Wanna see this on success stuff.
     public static string GreenConsole(string text) => $"<b><color=green>{text}</color></b>";
+    public static string RedConsole(string text) => $"<b><color=red>{text}</color></b>";
 }

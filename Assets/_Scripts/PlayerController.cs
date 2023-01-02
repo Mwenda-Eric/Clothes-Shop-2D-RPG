@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 1f;
     private readonly List<RaycastHit2D> _castCollisions = new List<RaycastHit2D>();
     public Animator playerAnimator;
-    private Transform _playerTransform;
 
     private Rigidbody2D _rigidbody2D;
 
@@ -20,6 +19,10 @@ public class PlayerController : MonoBehaviour
     private static readonly int SwordAttackAnimationId = Animator.StringToHash("SlashMelee1H");
     
     private bool _isPlayerMove = true;//Set to force on Attack animation events.
+    
+    private Transform _playerTransform;
+    public Transform PlayerTransform => _playerTransform;
+    public float PlayerHealth { private set; get; } = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -90,8 +93,20 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    public Transform PlayerTransform => _playerTransform;
+    public void ReceiveDamage(float damageAmount)
+    {
+        PlayerHealth -= damageAmount;
+        if (PlayerHealth <= 0)
+        {
+            PlayerDeath();
+        }
+    }
 
+    private void PlayerDeath()
+    {
+        Debug.Log(GameManager.RedConsole("Player DIES"));
+        gameObject.SetActive(false);
+    }
     //Functions called from Attack animation Events on first and last keyframes.
     public void LockMovement()
     {
