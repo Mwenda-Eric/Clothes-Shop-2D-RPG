@@ -7,6 +7,7 @@ using Cinemachine;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
     private string _folderPath;
 
     public TextMeshProUGUI shopkeeperDialogText;
+    public GameObject gameOverPanel;
 
     //Use the Singleton pattern for this GameManager.
     private void Awake()
@@ -48,8 +50,8 @@ public class GameManager : MonoBehaviour
         }else if(Instance != null) Destroy(this);
         
         DontDestroyOnLoad(this);
-        //PlayerPrefs.SetInt("PlayerCoins" , 1000000);
-        PlayerPrefs.DeleteKey("IsFirstTime");
+        //PlayerPrefs.SetInt("PlayerCoins" , 0);
+        //PlayerPrefs.DeleteKey("IsFirstTime");
         bool isFirstTime = PlayerPrefs.GetString("IsFirstTime").Length > 0;
         if (!isFirstTime)
         {
@@ -325,6 +327,15 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject quitGameButton;
+
+    public void EnableGameOverPanel()
+    {
+        gameOverPanel.SetActive(true);
+    }
+    public void RestartTheGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     public void QuitTheGame()
     {
         #if UNITY_EDITOR

@@ -62,8 +62,6 @@ public class Enemy : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, 
                 _player.transform.position, _followSpeed * Time.deltaTime);
         }
-
-        //healthText.text = _enemyHealth.ToString();
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -83,7 +81,7 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(knockBack, ForceMode2D.Impulse);
         }
     }
-    
+
     private void DisplayEnemyHealthBar()
     {
         healthText.text = ((int)_enemyHealth).ToString();

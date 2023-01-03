@@ -19,9 +19,7 @@ public class Chest : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             _chestAnimator.SetBool(ChestOpenHash, true);
-            GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
             GetComponent<BoxCollider2D>().enabled = false;
-            //Destroy(gameObject, 1f);
         }
     }
 

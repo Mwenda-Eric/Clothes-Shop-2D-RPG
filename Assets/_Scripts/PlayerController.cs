@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     private static readonly int IsPlayerWalkingAnimationId = Animator.StringToHash("isPlayerWalking");
     private static readonly int SwordAttackAnimationId = Animator.StringToHash("SlashMelee1H");
+    private static readonly int DieAnimationHash = Animator.StringToHash("PlayerDeath");
     
     private bool _isPlayerMove = true;//Set to force on Attack animation events.
     
@@ -152,6 +153,15 @@ public class PlayerController : MonoBehaviour
     private void PlayerDeath()
     {
         Debug.Log(GameManager.RedConsole("Player DIES"));
+        playerAnimator.SetTrigger(DieAnimationHash);
+        ShowGameOverPanel();
+        
+        //Invoke("ShowGameOverPanel", 3f);
+    }
+
+    private void ShowGameOverPanel()
+    {
+        GameManager.Instance.EnableGameOverPanel();
         gameObject.SetActive(false);
     }
     //Functions called from Attack animation Events on first and last keyframes.
