@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
     
     private Transform _playerTransform;
     public Transform PlayerTransform => _playerTransform;
-    public float PlayerHealth { private set; get; } = 100;
+    public float PlayerHealth { set; get; } = 100;
+    public float currentHealth = 100;
     public TextMeshProUGUI playerHealthText;
     public Image playerHealthBar;
     public RectTransform playerWorldCanvas;
@@ -34,8 +35,8 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerTransform = GetComponent<Transform>();
-        playerHealthText.text = ((int)PlayerHealth).ToString();
-
+        playerHealthText.text = ((int)currentHealth).ToString();
+        currentHealth = PlayerHealth;
     }
 
     // Update is called once per frame
@@ -50,6 +51,8 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         FlipPlayer();
+        
+        DisplayPlayerHealthBar();
     }
 
     private void MovePlayer()
@@ -120,10 +123,10 @@ public class PlayerController : MonoBehaviour
 
     public void ReceiveDamage(float damageAmount)
     {
-        PlayerHealth -= damageAmount;
+        currentHealth -= damageAmount;
         DisplayPlayerHealthBar();
         
-        if (PlayerHealth <= 0)
+        if (currentHealth <= 0)
         {
             PlayerDeath();
         }
@@ -131,16 +134,16 @@ public class PlayerController : MonoBehaviour
     
     private void DisplayPlayerHealthBar()
     {
-        playerHealthText.text = ((int)PlayerHealth).ToString();
+        playerHealthText.text = ((int)currentHealth).ToString();
         
-        var healthRatio = PlayerHealth / 100;
+        var healthRatio = currentHealth / PlayerHealth;
         
         //Decrease the scale of the health bar with the current health.
         var transformLocalScale = playerHealthBar.transform.localScale;
         transformLocalScale.x = healthRatio;
         playerHealthBar.transform.localScale = transformLocalScale;
         
-        Debug.Log(GameManager.RedConsole("Ratio = " + healthRatio));
+        //Debug.Log(GameManager.RedConsole("Ratio = " + healthRatio));
         
         //Lerp also the color from Green to Red with the health percentage too.
         playerHealthBar.color = Color.Lerp(Color.red, Color.green, healthRatio);

@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private int _outfitSelectedIndex;
     public Image outfitImageDisplay;
     public bool isOutfitPanelActive;
+    private int _selectedPurchasedOutfit;
     
     //Cinemachine Cameras.
     public CinemachineVirtualCamera cameraPlayer, cameraOutfit;
@@ -58,6 +59,25 @@ public class GameManager : MonoBehaviour
         char directorySeparator = Path.DirectorySeparatorChar;
         _folderPath = Application.persistentDataPath + directorySeparator + folderName + directorySeparator;
         purchasedOutfits = LoadAllOutfits();
+
+        _selectedPurchasedOutfit = PlayerPrefs.GetInt("SelectedPurchasedIndex", -1);
+        if (_selectedPurchasedOutfit >= 0)
+        {
+            AssignPlayerAttributesToOutfit(clothesList[_selectedPurchasedOutfit]);
+            DressCharacterSelectedPurchasedOutfit(_selectedPurchasedOutfit);
+        }
+        else
+        {
+            DressNoOutfit();
+        }
+        //PlayerPrefs.DeleteKey("SelectedPurchasedIndex");
+    }
+
+    private void AssignPlayerAttributesToOutfit(ClothParts outfit)
+    {
+        SwordTrigger.SwordDamage = (int)outfit.clothSwordDamage;
+        _playerController.PlayerHealth = (int)outfit.clothPlayerHealth;
+        _playerController.currentHealth = (int)outfit.clothPlayerHealth;
     }
     
     public void AddPlayerCoins(int numberOfCoins,bool isIncrease)
@@ -99,6 +119,15 @@ public class GameManager : MonoBehaviour
 
     public void DisableOutfitSelectionPanel()
     {
+        if (PlayerPrefs.GetInt("SelectedPurchasedIndex", -1) < 0)
+        {
+            DressNoOutfit();
+        }
+        else
+        {
+            DressCharacterSelectedPurchasedOutfit(PlayerPrefs.GetInt("SelectedPurchasedIndex"));
+        }
+        
         isOutfitPanelActive = false;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
         
@@ -132,11 +161,34 @@ public class GameManager : MonoBehaviour
             outfitPanelInfoDisplay.color = Color.green;
             outfitPanelInfoDisplay.text = "Already Bought " + clothesList[outfitIndex].clothName;
             buyButton.SetActive(false);
+            AssignPlayerAttributesToOutfit(clothesList[_outfitSelectedIndex]);
+            
+            PlayerPrefs.SetInt("SelectedPurchasedIndex", _outfitSelectedIndex);
+            _selectedPurchasedOutfit = _outfitSelectedIndex;
         }
         else
         {
             outfitPanelInfoDisplay.text = "";
             buyButton.SetActive(true);
+        }
+    }
+
+    private void DressCharacterSelectedPurchasedOutfit(int selectedPurchasedIndex)
+    {
+        for (int i = 0; i < characterClothRenderer.Length; ++i)
+        {
+            characterClothRenderer[i].sprite = clothesList[selectedPurchasedIndex].clothSprites[i];
+        }
+        PlayerPrefs.SetInt("SelectedPurchasedIndex", selectedPurchasedIndex);
+        _selectedPurchasedOutfit = selectedPurchasedIndex;
+    }
+
+    private void DressNoOutfit()
+    {
+        for (int i = 0; i < characterClothRenderer.Length; ++i)
+        {
+            characterClothRenderer[i].sprite = clothesList[0].clothSprites[i];
+            if (i is 11 or 14) characterClothRenderer[i].sprite = null;
         }
     }
 
@@ -162,6 +214,9 @@ public class GameManager : MonoBehaviour
         AddPlayerCoins((int)clothesList[_outfitSelectedIndex].clothPrice, false);
         DressCharacterSelectedOutfit();
         
+        AssignPlayerAttributesToOutfit(clothesList[_outfitSelectedIndex]);
+        PlayerPrefs.SetInt("SelectedPurchasedIndex", _outfitSelectedIndex);
+
         //Save the purchased outfit to local storage.
         SavePurchasedOutfit(clothesList[_outfitSelectedIndex]);
     }

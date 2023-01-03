@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
             _enemyHealth = value;
             if (_enemyHealth <= 0)
             {
+                _enemyHealth = 0;
                 EnemyDefeated();
             }
         }

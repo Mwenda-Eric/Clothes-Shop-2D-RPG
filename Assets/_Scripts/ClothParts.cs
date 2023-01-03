@@ -8,7 +8,7 @@ public class ClothParts
 {
     public string clothName;//The name of the outfit we are wearing.
     public int clothIndex;
-    public bool isPurchased;
+    public bool isLastWorn;
     public float clothPlayerHealth;
     public float clothSwordDamage;
     public float clothPrice;

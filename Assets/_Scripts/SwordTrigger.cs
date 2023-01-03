@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SwordTrigger : MonoBehaviour
 {
-    private readonly int _swordDamage = 10;
+    public static int SwordDamage = 10;
     private BoxCollider2D _swordCollider;
 
     private void Start()
@@ -19,7 +19,7 @@ public class SwordTrigger : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             //Debug.Log("Give Slime Damage!");
-            col.GetComponent<Enemy>().TakeDamage(_swordDamage);
+            col.GetComponent<Enemy>().TakeDamage(SwordDamage);
         }
     }
 
