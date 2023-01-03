@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cinemachine;
 using TMPro;
 using UnityEngine;
@@ -13,11 +14,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public SpriteRenderer[] characterClothRenderer;
     public List<ClothParts> clothesList;
+    private ClothParts[] purchasedOutfits;
+    private int[] purchasedIndexes;
     private int _clothesIndex;
     private int _playerCoins;
     
     //Outfit Panel UI Elements.
-    public GameObject outfitSelectionPanel, attributesPanel;
+    public GameObject outfitSelectionPanel, attributesPanel, buyButton;
     public TextMeshProUGUI outfitNameText, outfitPriceText, outfitHealthText, outfitSwordDamageText;
     public TextMeshProUGUI outfitPanelInfoDisplay, coinsDisplay;
     private int _outfitSelectedIndex;
@@ -29,6 +32,8 @@ public class GameManager : MonoBehaviour
 
     private PlayerController _playerController;
     private ShopkeeperScript _shopkeeper;
+
+    private string _folderPath;
 
     //Use the Singleton pattern for this GameManager.
     private void Awake()
@@ -47,39 +52,35 @@ public class GameManager : MonoBehaviour
         _playerController = FindObjectOfType<PlayerController>();
         _shopkeeper = FindObjectOfType<ShopkeeperScript>();
         DisplayCoins();
+        
+        //Path to be saving the purchased outfit classes.
+        string folderName = "Outfits";
+        char directorySeparator = Path.DirectorySeparatorChar;
+        _folderPath = Application.persistentDataPath + directorySeparator + folderName + directorySeparator;
+        purchasedOutfits = LoadAllOutfits();
     }
-
-    public void AddPlayerCoins(int numberOfCoins)
+    
+    public void AddPlayerCoins(int numberOfCoins,bool isIncrease)
     {
         _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
-        _playerCoins += numberOfCoins;
+        if (isIncrease) _playerCoins += numberOfCoins; else _playerCoins -= numberOfCoins;
         PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
         
         DisplayCoins();
         Debug.Log(GreenConsole("Coins Added! Total = " + _playerCoins));
     }
 
-    private void DecreasePlayerCoins(int numberOfCoins)
-    {
-        _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
-        _playerCoins -= numberOfCoins;
-        PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
-        
-        DisplayCoins();
-        Debug.Log(RedConsole("Coins Decreased! Total = " + _playerCoins));
-    }
-
     private void DisplayCoins()
     {
         _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
-        coinsDisplay.text = _playerCoins.ToString();
+        coinsDisplay.text = "Coins\n" + _playerCoins;
     }
 
     public void EnableOutfitSelectionPanel()
     {
         isOutfitPanelActive = true;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
-        //_shopkeeper.gameObject.SetActive(false);
+        
         //Set the zoom camera.
         cameraPlayer.Priority = cameraOutfit.Priority - 1;
         _playerController.LockMovement();
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour
     {
         isOutfitPanelActive = false;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
-        //_shopkeeper.gameObject.SetActive(true);
+        
         cameraPlayer.Priority = cameraOutfit.Priority + 1;
         _playerController.UnlockMovement();
     }
@@ -114,21 +115,41 @@ public class GameManager : MonoBehaviour
         outfitSwordDamageText.text = "SWORD DAMAGE\n" + clothesList[outfitIndex].clothSwordDamage;
         _outfitSelectedIndex = outfitIndex;
         DressCharacterSelectedOutfit();
+
+        if (IsOutfitPurchased(outfitIndex))
+        {
+            Debug.Log("Outfit is Already Purchased.");
+            outfitPanelInfoDisplay.color = Color.green;
+            outfitPanelInfoDisplay.text = "Already Bought " + clothesList[outfitIndex].clothName;
+            buyButton.SetActive(false);
+        }
+        else
+        {
+            outfitPanelInfoDisplay.text = "";
+            buyButton.SetActive(true);
+        }
+    }
+
+    private bool IsOutfitPurchased(int outfitIndex)
+    {
+        purchasedOutfits = LoadAllOutfits();
+        return purchasedIndexes.Contains(outfitIndex);
     }
 
     public void BuyTheOutfit()
     {
-        Debug.Log("Check if we have enough coins though.");
         if (_playerCoins < clothesList[_outfitSelectedIndex].clothPrice)
         {
             outfitPanelInfoDisplay.color = Color.red;
             outfitPanelInfoDisplay.text = "Not Enough Coins!";
             return;
         }
+        
         outfitPanelInfoDisplay.color = Color.green;
         outfitPanelInfoDisplay.text = "Successfully Bought " + clothesList[_outfitSelectedIndex].clothName; 
+        buyButton.SetActive(false);
         
-        DecreasePlayerCoins((int)clothesList[_outfitSelectedIndex].clothPrice);
+        AddPlayerCoins((int)clothesList[_outfitSelectedIndex].clothPrice, false);
         DressCharacterSelectedOutfit();
         
         //Save the purchased outfit to local storage.
@@ -139,13 +160,39 @@ public class GameManager : MonoBehaviour
     {
         string fileName = outfit.clothName;
         string fileExtension = ".json";
-        string filePath = Application.persistentDataPath + Path.DirectorySeparatorChar + fileName + fileExtension;
+        
+        if (!Directory.Exists(_folderPath))
+            Directory.CreateDirectory(_folderPath);
+        
+        var filePath = _folderPath + fileName + fileExtension;
 
         var json = JsonUtility.ToJson(outfit);
         File.WriteAllText(filePath, json);
-        Debug.Log(GreenConsole("Saved Successfully to : " + filePath));
+        //Debug.Log(GreenConsole("Saved Successfully to : " + filePath));
     }
 
+    private ClothParts[] LoadAllOutfits()
+    {
+        if (!Directory.Exists(_folderPath))
+            Directory.CreateDirectory(_folderPath);
+        
+        var files = Directory.GetFiles(_folderPath);
+        var data = new ClothParts[files.Length];
+
+        for (int i = 0; i < files.Length; ++i)
+        {
+            var json = File.ReadAllText(files[i]);
+            data[i] = JsonUtility.FromJson<ClothParts>(json);
+        }
+        
+        purchasedIndexes = new int[data.Length];
+        for (int i = 0; i < data.Length; ++i)
+        {
+            purchasedIndexes[i] = data[i].clothIndex;
+        }
+        return data;
+    }
+    
     private void DressCharacterSelectedOutfit()
     {
         //This will Dress the character with cloth sprites at selected Index.

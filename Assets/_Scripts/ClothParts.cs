@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class ClothParts
 {
     public string clothName;//The name of the outfit we are wearing.
-    public string clothIndex;
+    public int clothIndex;
+    public bool isPurchased;
     public float clothPlayerHealth;
     public float clothSwordDamage;
     public float clothPrice;

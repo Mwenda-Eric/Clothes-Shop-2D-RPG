@@ -20,14 +20,14 @@ public class Chest : MonoBehaviour
         {
             _chestAnimator.SetBool(ChestOpenHash, true);
             Debug.Log("Player Opened Chest.");
-            GameManager.Instance.AddPlayerCoins(ChestCoinsAmount);
+            GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
             Destroy(gameObject);
         }
     }
 
     public void DestroyThisObjectFromAnimationEvent()//called from last keyframe of chest open animation.
     {
-        GameManager.Instance.AddPlayerCoins(ChestCoinsAmount);
+        GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
         Destroy(gameObject);
     }
 }
