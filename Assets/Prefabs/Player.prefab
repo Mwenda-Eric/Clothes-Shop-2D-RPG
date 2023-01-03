@@ -490,9 +490,10 @@ MonoBehaviour:
   collisionOffset: 1
   moveSpeed: 1
   playerAnimator: {fileID: 95570845223693640}
+  currentHealth: 0
   playerHealthText: {fileID: 7023809022101034298}
-  playerHealthTextTransform: {fileID: 3204880039949887514}
   playerHealthBar: {fileID: 5839323980039578427}
+  playerWorldCanvas: {fileID: 3899529267939808329}
 --- !u!114 &7876075803206398874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3742,7 +3743,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 160
-  m_Sprite: {fileID: 21300000, guid: 0b4a290789e74f1aa06e797b50c986e0, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3750,7 +3751,7 @@ SpriteRenderer:
   m_Size: {x: 2.35, y: 2.3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1486651407242258
@@ -5746,7 +5747,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 275
-  m_Sprite: {fileID: 21300000, guid: b76e792f7eaa493092d85a943436ebb1, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5754,7 +5755,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1764530586590752
