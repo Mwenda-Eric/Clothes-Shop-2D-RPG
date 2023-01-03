@@ -72,7 +72,6 @@ public class Enemy : MonoBehaviour
         {
             //Give the player damage.
             _player.ReceiveDamage(_enemyDamage);
-            Debug.Log(GameManager.RedConsole("Player Health = " + _player.PlayerHealth));
         }
         if (col.CompareTag("Sword"))
         {
@@ -94,8 +93,6 @@ public class Enemy : MonoBehaviour
         var transformLocalScale = enemyHealthBar.transform.localScale;
         transformLocalScale.x = healthRatio;
         enemyHealthBar.transform.localScale = transformLocalScale;
-        
-        Debug.Log(GameManager.RedConsole("Ratio = " + healthRatio));
         
         //Lerp also the color from Green to Red with the health percentage too.
         enemyHealthBar.color = Color.Lerp(Color.red, Color.green, healthRatio);

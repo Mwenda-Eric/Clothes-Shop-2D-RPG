@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] characterClothRenderer;
     public List<ClothParts> clothesList;
     private ClothParts[] purchasedOutfits;
-    private int[] purchasedIndexes;
+    private List<int> purchasedIndexes = new();
     private int _clothesIndex;
     private int _playerCoins;
     
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         DisplayCoins();
         
         //Path to be saving the purchased outfit classes.
-        string folderName = "Outfits";
+        string folderName = "PurchasedOutfits";
         char directorySeparator = Path.DirectorySeparatorChar;
         _folderPath = Application.persistentDataPath + directorySeparator + folderName + directorySeparator;
         purchasedOutfits = LoadAllOutfits();
@@ -67,7 +67,6 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
         
         DisplayCoins();
-        Debug.Log(GreenConsole("Coins Added! Total = " + _playerCoins));
     }
 
     private void DisplayCoins()
@@ -80,6 +79,18 @@ public class GameManager : MonoBehaviour
     {
         isOutfitPanelActive = true;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
+        
+        if (IsOutfitPurchased(0))
+        {
+            outfitPanelInfoDisplay.color = Color.green;
+            outfitPanelInfoDisplay.text = "Already Bought " + clothesList[0].clothName;
+            buyButton.SetActive(false);
+        }
+        else
+        {
+            outfitPanelInfoDisplay.text = "";
+            buyButton.SetActive(true);
+        }
         
         //Set the zoom camera.
         cameraPlayer.Priority = cameraOutfit.Priority - 1;
@@ -118,7 +129,6 @@ public class GameManager : MonoBehaviour
 
         if (IsOutfitPurchased(outfitIndex))
         {
-            Debug.Log("Outfit is Already Purchased.");
             outfitPanelInfoDisplay.color = Color.green;
             outfitPanelInfoDisplay.text = "Already Bought " + clothesList[outfitIndex].clothName;
             buyButton.SetActive(false);
@@ -168,7 +178,7 @@ public class GameManager : MonoBehaviour
 
         var json = JsonUtility.ToJson(outfit);
         File.WriteAllText(filePath, json);
-        //Debug.Log(GreenConsole("Saved Successfully to : " + filePath));
+        Debug.Log("Outfit SAVED.");
     }
 
     private ClothParts[] LoadAllOutfits()
@@ -176,8 +186,10 @@ public class GameManager : MonoBehaviour
         if (!Directory.Exists(_folderPath))
             Directory.CreateDirectory(_folderPath);
         
-        var files = Directory.GetFiles(_folderPath);
+        var files = Directory.GetFiles(_folderPath, "*.json", SearchOption.TopDirectoryOnly);
         var data = new ClothParts[files.Length];
+
+        if (files.Length <= 0) return null; 
 
         for (int i = 0; i < files.Length; ++i)
         {
@@ -185,10 +197,9 @@ public class GameManager : MonoBehaviour
             data[i] = JsonUtility.FromJson<ClothParts>(json);
         }
         
-        purchasedIndexes = new int[data.Length];
         for (int i = 0; i < data.Length; ++i)
         {
-            purchasedIndexes[i] = data[i].clothIndex;
+            purchasedIndexes.Add(data[i].clothIndex);
         }
         return data;
     }
