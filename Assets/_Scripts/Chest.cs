@@ -16,18 +16,19 @@ public class Chest : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Sword"))
+        if (col.CompareTag("Player"))
         {
             _chestAnimator.SetBool(ChestOpenHash, true);
-            Debug.Log("Player Opened Chest.");
             GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
-            Destroy(gameObject);
+            GetComponent<BoxCollider2D>().enabled = false;
+            //Destroy(gameObject, 1f);
         }
     }
 
     public void DestroyThisObjectFromAnimationEvent()//called from last keyframe of chest open animation.
     {
+        Debug.Log(GameManager.RedConsole("Called From Chest Animation Event."));
         GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
-        Destroy(gameObject);
+        Destroy(gameObject, 1f);
     }
 }

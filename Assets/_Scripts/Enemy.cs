@@ -112,8 +112,8 @@ public class Enemy : MonoBehaviour
     }
     private void EnemyDefeated()
     {
-        _enemyAnimator.SetTrigger(SlimeDeathTrigger);
         SpawnInChest();
+        _enemyAnimator.SetTrigger(SlimeDeathTrigger);
     }
 
     public void DestroyEnemy()

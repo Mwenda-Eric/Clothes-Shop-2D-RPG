@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Cinemachine;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -48,11 +49,13 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(this);
         //PlayerPrefs.SetInt("PlayerCoins" , 1000000);
+        PlayerPrefs.DeleteKey("IsFirstTime");
         bool isFirstTime = PlayerPrefs.GetString("IsFirstTime").Length > 0;
         if (!isFirstTime)
         {
             ShowTutorialSpeech();
             PlayerPrefs.SetString("IsFirstTime", "No");
+            PlayerPrefs.DeleteKey("SelectedPurchasedIndex");
         }
         else
         {
@@ -109,6 +112,7 @@ public class GameManager : MonoBehaviour
 
     public void EnableOutfitSelectionPanel()
     {
+        quitGameButton.SetActive(false);
         isOutfitPanelActive = true;
         outfitSelectionPanel.SetActive(isOutfitPanelActive);
         
@@ -131,6 +135,7 @@ public class GameManager : MonoBehaviour
 
     public void DisableOutfitSelectionPanel()
     {
+        quitGameButton.SetActive(true);
         if (PlayerPrefs.GetInt("SelectedPurchasedIndex", -1) < 0)
         {
             DressNoOutfit();
@@ -287,13 +292,49 @@ public class GameManager : MonoBehaviour
 
     private void ShowTutorialSpeech()
     {
-        shopkeeperDialogText.text = "Hi warrior! Use WASD or Arrow Keys to move," +
-                                    " Move closer to my shop to buy war outfits";
+        var shopkeeperMessage = "Hi warrior! Use WASD or Arrow Keys to move." +
+                                    "Use left mouse to attack. Move closer to my shop to buy war outfits";
+        TypingFunction(shopkeeperMessage, shopkeeperDialogText);
     }
 
     private void ShowDefaultSpeech()
     {
-        shopkeeperDialogText.text = "Hi warrior, you can visit my shop and buy incredible battle outfits";
+        var shopkeeperMessage = "Hi warrior, you can visit my shop and buy incredible battle outfits";
+        TypingFunction(shopkeeperMessage, shopkeeperDialogText);
+    }
+    
+    private void TypingFunction(string whatToType, TextMeshProUGUI textViewToUse)
+    {
+        StartCoroutine(TypingCoroutine(whatToType, textViewToUse));
+    }
+    
+    public bool inTypingAnimation;
+    IEnumerator TypingCoroutine(string whatToType, TextMeshProUGUI textViewToUse)
+    {
+        //The default of typingSpeed in this function is = 0.006f;
+        inTypingAnimation = true;
+        textViewToUse.text = "";
+        float typingSpeed = 0.06f;
+        foreach (char letter in whatToType.ToCharArray())
+        {
+            textViewToUse.text += letter;
+
+            yield return new WaitForSeconds(typingSpeed);
+        }
+        inTypingAnimation = false;
+    }
+
+    public GameObject quitGameButton;
+    public void QuitTheGame()
+    {
+        #if UNITY_EDITOR
+        if (EditorApplication.isPlaying)
+        {
+            EditorApplication.isPlaying = false;
+        }
+#else
+        Application.Quit(0);
+#endif
     }
     
     //Turn Debug Message to green. Wanna see this on success stuff.
