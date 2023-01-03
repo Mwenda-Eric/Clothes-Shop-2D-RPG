@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     //Outfit Panel UI Elements.
     public GameObject outfitSelectionPanel, attributesPanel;
     public TextMeshProUGUI outfitNameText, outfitPriceText, outfitHealthText, outfitSwordDamageText;
-    public TextMeshProUGUI outfitPanelInfoDisplay;
+    public TextMeshProUGUI outfitPanelInfoDisplay, coinsDisplay;
     private int _outfitSelectedIndex;
     public Image outfitImageDisplay;
     public bool isOutfitPanelActive;
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         _playerController = FindObjectOfType<PlayerController>();
         _shopkeeper = FindObjectOfType<ShopkeeperScript>();
+        DisplayCoins();
     }
 
     public void AddPlayerCoins(int numberOfCoins)
@@ -52,7 +53,14 @@ public class GameManager : MonoBehaviour
         _playerCoins += numberOfCoins;
         PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
         
+        DisplayCoins();
         Debug.Log(GreenConsole("Coins Added! Total = " + _playerCoins));
+    }
+
+    private void DisplayCoins()
+    {
+        _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
+        coinsDisplay.text = _playerCoins.ToString();
     }
 
     public void EnableOutfitSelectionPanel()
@@ -99,6 +107,12 @@ public class GameManager : MonoBehaviour
     public void BuyTheOutfit()
     {
         Debug.Log("Check if we have enough coins though.");
+        if (_playerCoins < clothesList[_outfitSelectedIndex].clothPrice)
+        {
+            outfitPanelInfoDisplay.color = Color.red;
+            outfitPanelInfoDisplay.text = "Not Enough Coins!";
+            return;
+        }
         outfitPanelInfoDisplay.color = Color.green;
         outfitPanelInfoDisplay.text = "Successfully Bought " + clothesList[_outfitSelectedIndex].clothName; 
         DressCharacterSelectedOutfit();

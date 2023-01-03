@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,12 +25,17 @@ public class PlayerController : MonoBehaviour
     private Transform _playerTransform;
     public Transform PlayerTransform => _playerTransform;
     public float PlayerHealth { private set; get; } = 100;
+    public TextMeshProUGUI playerHealthText;
+    public Image playerHealthBar;
+    public RectTransform playerWorldCanvas;
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerTransform = GetComponent<Transform>();
+        playerHealthText.text = ((int)PlayerHealth).ToString();
+
     }
 
     // Update is called once per frame
@@ -40,6 +47,13 @@ public class PlayerController : MonoBehaviour
         }
         if (!_isPlayerMove) return;//If the player Cant move don't proceed to try and move. Value changed by Animation events.
 
+        MovePlayer();
+
+        FlipPlayer();
+    }
+
+    private void MovePlayer()
+    {
         if (_movementInput != Vector2.zero)//This means that the player wants to move.
         {
             playerAnimator.SetBool(IsPlayerWalkingAnimationId, true);
@@ -60,13 +74,24 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void FlipPlayer()
+    {
         _playerTransform.rotation = _movementInput.x switch
         {
             //Rotate the Character for left and right movement.
             < 0 => Quaternion.Euler(0, 180, 0),
             > 0 => Quaternion.Euler(0, 0, 0),
             _ => _playerTransform.rotation
+        };
+        
+        playerWorldCanvas.rotation = _movementInput.x switch
+        {
+            //Rotate the Character for left and right movement.
+            < 0 => Quaternion.Euler(0, 0, 0),
+            > 0 => Quaternion.Euler(0, 0, 0),
+            _ => playerWorldCanvas.rotation
         };
     }
     
@@ -96,10 +121,29 @@ public class PlayerController : MonoBehaviour
     public void ReceiveDamage(float damageAmount)
     {
         PlayerHealth -= damageAmount;
+        DisplayPlayerHealthBar();
+        
         if (PlayerHealth <= 0)
         {
             PlayerDeath();
         }
+    }
+    
+    private void DisplayPlayerHealthBar()
+    {
+        playerHealthText.text = ((int)PlayerHealth).ToString();
+        
+        var healthRatio = PlayerHealth / 100;
+        
+        //Decrease the scale of the health bar with the current health.
+        var transformLocalScale = playerHealthBar.transform.localScale;
+        transformLocalScale.x = healthRatio;
+        playerHealthBar.transform.localScale = transformLocalScale;
+        
+        Debug.Log(GameManager.RedConsole("Ratio = " + healthRatio));
+        
+        //Lerp also the color from Green to Red with the health percentage too.
+        playerHealthBar.color = Color.Lerp(Color.red, Color.green, healthRatio);
     }
 
     private void PlayerDeath()

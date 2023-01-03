@@ -49,6 +49,8 @@ public class Enemy : MonoBehaviour
         _enemyAnimator = GetComponent<Animator>();
         int[] randomAnimationId = { SlimeIdleHash, SlimeJumpFarHash, SlimeJumpFarHash, SlimeUpAndDownHash, SlimeJumpLowHash };
         _enemyAnimator.Play(randomAnimationId[Random.Range(0, randomAnimationId.Length)]);
+        healthText.text = ((int)_enemyHealth).ToString();
+
     }
 
     private void Update()
