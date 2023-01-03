@@ -59,13 +59,12 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("I'm Enemy Triggered by : " + col.name);
+        //Debug.Log("I'm Enemy Triggered by : " + col.name);
         if (col.CompareTag("Player"))
         {
             //Give the player damage.
             _player.ReceiveDamage(_enemyDamage);
             Debug.Log(GameManager.RedConsole("Player Health = " + _player.PlayerHealth));
-            
         }
         if (col.CompareTag("Sword"))
         {
