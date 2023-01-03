@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Cinemachine;
 using TMPro;
 using UnityEngine;
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         }else if(Instance != null) Destroy(this);
         
         DontDestroyOnLoad(this);
+        //PlayerPrefs.SetInt("PlayerCoins" , 1000000);
     }
 
     private void Start()
@@ -55,6 +57,16 @@ public class GameManager : MonoBehaviour
         
         DisplayCoins();
         Debug.Log(GreenConsole("Coins Added! Total = " + _playerCoins));
+    }
+
+    private void DecreasePlayerCoins(int numberOfCoins)
+    {
+        _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
+        _playerCoins -= numberOfCoins;
+        PlayerPrefs.SetInt("PlayerCoins", _playerCoins);
+        
+        DisplayCoins();
+        Debug.Log(RedConsole("Coins Decreased! Total = " + _playerCoins));
     }
 
     private void DisplayCoins()
@@ -115,7 +127,23 @@ public class GameManager : MonoBehaviour
         }
         outfitPanelInfoDisplay.color = Color.green;
         outfitPanelInfoDisplay.text = "Successfully Bought " + clothesList[_outfitSelectedIndex].clothName; 
+        
+        DecreasePlayerCoins((int)clothesList[_outfitSelectedIndex].clothPrice);
         DressCharacterSelectedOutfit();
+        
+        //Save the purchased outfit to local storage.
+        SavePurchasedOutfit(clothesList[_outfitSelectedIndex]);
+    }
+
+    private void SavePurchasedOutfit(ClothParts outfit)
+    {
+        string fileName = outfit.clothName;
+        string fileExtension = ".json";
+        string filePath = Application.persistentDataPath + Path.DirectorySeparatorChar + fileName + fileExtension;
+
+        var json = JsonUtility.ToJson(outfit);
+        File.WriteAllText(filePath, json);
+        Debug.Log(GreenConsole("Saved Successfully to : " + filePath));
     }
 
     private void DressCharacterSelectedOutfit()
