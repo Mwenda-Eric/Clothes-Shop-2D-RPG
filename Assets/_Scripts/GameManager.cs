@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
 
     private string _folderPath;
 
+    public TextMeshProUGUI shopkeeperDialogText;
+
     //Use the Singleton pattern for this GameManager.
     private void Awake()
     {
@@ -46,6 +48,16 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(this);
         //PlayerPrefs.SetInt("PlayerCoins" , 1000000);
+        bool isFirstTime = PlayerPrefs.GetString("IsFirstTime").Length > 0;
+        if (!isFirstTime)
+        {
+            ShowTutorialSpeech();
+            PlayerPrefs.SetString("IsFirstTime", "No");
+        }
+        else
+        {
+            ShowDefaultSpeech();
+        }
     }
 
     private void Start()
@@ -271,6 +283,17 @@ public class GameManager : MonoBehaviour
     public void ButtonPressed()
     {
         Debug.Log(GreenConsole("UI Button Pressed!"));
+    }
+
+    private void ShowTutorialSpeech()
+    {
+        shopkeeperDialogText.text = "Hi warrior! Use WASD or Arrow Keys to move," +
+                                    " Move closer to my shop to buy war outfits";
+    }
+
+    private void ShowDefaultSpeech()
+    {
+        shopkeeperDialogText.text = "Hi warrior, you can visit my shop and buy incredible battle outfits";
     }
     
     //Turn Debug Message to green. Wanna see this on success stuff.
