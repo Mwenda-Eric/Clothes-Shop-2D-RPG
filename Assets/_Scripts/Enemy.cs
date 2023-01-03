@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class Enemy : MonoBehaviour
     private float _knockBackForce = 5f;
 
     public GameObject chest;
+    public TextMeshProUGUI healthText;
+    public Image enemyHealthBar;
     
     #region Animator Hashes
     private static readonly int SlimeDeathTrigger = Animator.StringToHash("SlimeDeath");
@@ -55,6 +59,8 @@ public class Enemy : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, 
                 _player.transform.position, _followSpeed * Time.deltaTime);
         }
+
+        //healthText.text = _enemyHealth.ToString();
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -75,10 +81,28 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(knockBack, ForceMode2D.Impulse);
         }
     }
+    
+    private void DisplayEnemyHealthBar()
+    {
+        healthText.text = ((int)_enemyHealth).ToString();
+        
+        var healthRatio = _enemyHealth / 100;
+        
+        //Decrease the scale of the health bar with the current health.
+        var transformLocalScale = enemyHealthBar.transform.localScale;
+        transformLocalScale.x = healthRatio;
+        enemyHealthBar.transform.localScale = transformLocalScale;
+        
+        Debug.Log(GameManager.RedConsole("Ratio = " + healthRatio));
+        
+        //Lerp also the color from Green to Red with the health percentage too.
+        enemyHealthBar.color = Color.Lerp(Color.red, Color.green, healthRatio);
+    }
 
     public void TakeDamage(float damageAmount)
     {
         EnemyHealth -= damageAmount;
+        DisplayEnemyHealthBar();
     }
 
     private void SpawnInChest()
