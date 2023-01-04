@@ -1,6 +1,6 @@
-## Clothes Shop 2DRPG
+# Clothes Shop 2DRPG
 
-# Game Mechanics
+## Game Mechanics
 
 On the first launch of the game, the player is given a couple instructions on how the game works. Here are the game controls.
 
