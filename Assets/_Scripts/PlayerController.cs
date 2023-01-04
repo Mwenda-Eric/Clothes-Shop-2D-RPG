@@ -151,7 +151,6 @@ public class PlayerController : MonoBehaviour
         
         //Lerp also the color from Green to Red with the health percentage too.
         playerHealthBar.color = Color.Lerp(Color.red, Color.green, healthRatio);
-        GameManager.Instance.enemiesRemaining = GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
 
     private void PlayerDeath()
