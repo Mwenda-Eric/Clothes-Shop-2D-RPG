@@ -25,7 +25,6 @@ public class Chest : MonoBehaviour
 
     public void DestroyThisObjectFromAnimationEvent()//called from last keyframe of chest open animation.
     {
-        Debug.Log(GameManager.RedConsole("Called From Chest Animation Event."));
         GameManager.Instance.AddPlayerCoins(ChestCoinsAmount, true);
         Destroy(gameObject, 1f);
     }

@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
             {
                 _enemyHealth = 0;
                 EnemyDefeated();
+                GetComponent<CapsuleCollider2D>().enabled = false;
             }
         }
         get => _enemyHealth;
@@ -112,6 +113,7 @@ public class Enemy : MonoBehaviour
     {
         SpawnInChest();
         _enemyAnimator.SetTrigger(SlimeDeathTrigger);
+        GameManager.Instance.AreThereMoreEnemies();
     }
 
     public void DestroyEnemy()

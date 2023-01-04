@@ -30,7 +30,8 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI playerHealthText;
     public Image playerHealthBar;
     public RectTransform playerWorldCanvas;
-
+    public Vector2 playerStartPosition;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
         _playerTransform = GetComponent<Transform>();
         playerHealthText.text = ((int)currentHealth).ToString();
         currentHealth = PlayerHealth;
+        playerStartPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -129,6 +131,7 @@ public class PlayerController : MonoBehaviour
         
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             PlayerDeath();
         }
     }
@@ -153,16 +156,19 @@ public class PlayerController : MonoBehaviour
     private void PlayerDeath()
     {
         Debug.Log(GameManager.RedConsole("Player DIES"));
-        playerAnimator.SetTrigger(DieAnimationHash);
-        ShowGameOverPanel();
         
-        //Invoke("ShowGameOverPanel", 3f);
+        //Animator event will call the show game over panel after death animation.
+        playerAnimator.SetTrigger(DieAnimationHash);
+        GameManager.Instance.isPlayerDead = true;
+        //ShowGameOverPanel();
+        
+        Invoke("ShowGameOverPanel", 3f);
     }
 
     private void ShowGameOverPanel()
     {
         GameManager.Instance.EnableGameOverPanel();
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     //Functions called from Attack animation Events on first and last keyframes.
     public void LockMovement()
@@ -177,12 +183,14 @@ public class PlayerController : MonoBehaviour
     //This Method is called(Will receive Message) from the PlayerInput Action Asset of the new Input System.
     void OnMove(InputValue movementValue)
     {
+        if (GameManager.Instance.isPlayerDead) return;
         //Get the Vector2 from the Input value.
         _movementInput = movementValue.Get<Vector2>();
     }
     
     void OnFire()
     {
+        if (GameManager.Instance.isPlayerDead) return;
         if (GameManager.Instance.isOutfitPanelActive) return;
         playerAnimator.Play(SwordAttackAnimationId);
     }

@@ -41,6 +41,13 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI shopkeeperDialogText;
     public GameObject gameOverPanel;
 
+    public bool isPlayerDead;
+    
+    public Transform[] spawnPoints;
+    public GameObject enemyPrefab;
+
+    public static int Seed = 1;
+
     //Use the Singleton pattern for this GameManager.
     private void Awake()
     {
@@ -49,7 +56,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }else if(Instance != null) Destroy(this);
         
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         //PlayerPrefs.SetInt("PlayerCoins" , 0);
         //PlayerPrefs.DeleteKey("IsFirstTime");
         bool isFirstTime = PlayerPrefs.GetString("IsFirstTime").Length > 0;
@@ -88,6 +95,8 @@ public class GameManager : MonoBehaviour
             DressNoOutfit();
         }
         //PlayerPrefs.DeleteKey("SelectedPurchasedIndex");
+        SpawnEnemies();
+        AreThereMoreEnemies();
     }
 
     private void AssignPlayerAttributesToOutfit(ClothParts outfit)
@@ -96,7 +105,7 @@ public class GameManager : MonoBehaviour
         _playerController.PlayerHealth = (int)outfit.clothPlayerHealth;
         _playerController.currentHealth = (int)outfit.clothPlayerHealth;
     }
-    
+
     public void AddPlayerCoins(int numberOfCoins,bool isIncrease)
     {
         _playerCoins = PlayerPrefs.GetInt("PlayerCoins");
@@ -145,6 +154,7 @@ public class GameManager : MonoBehaviour
         else
         {
             DressCharacterSelectedPurchasedOutfit(PlayerPrefs.GetInt("SelectedPurchasedIndex"));
+            //SpawnEnemies();
         }
         
         isOutfitPanelActive = false;
@@ -287,6 +297,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void SpawnEnemies()
+    {
+        foreach (var t in spawnPoints)
+        {
+            Instantiate(enemyPrefab, t.position, Quaternion.identity, transform);
+        }
+    }
+
+    private void SpawnIncrementingSeed()
+    {
+        ++Seed;
+        for(int i = 0; i < Seed; ++i) SpawnEnemies();
+    }
+
+    private int enemiesRemaining;
+    public TextMeshProUGUI enemiesRemainingText, currentLevelText, levelLargeDisplay;
+    public void AreThereMoreEnemies()
+    {
+        enemiesRemaining = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        enemiesRemainingText.text = "Enemies\n"+enemiesRemaining;
+        currentLevelText.text = "Level " + Seed;
+        Debug.Log("Enemies remaining = " + enemiesRemaining);
+        
+        if (enemiesRemaining <= 1)
+        {
+            _playerController.transform.position = _playerController.playerStartPosition;
+            SpawnIncrementingSeed();
+            enemiesRemainingText.text = "Enemies\n"+enemiesRemaining;
+            currentLevelText.text = "Level " + Seed;
+            TypingFunction("Level " + Seed, levelLargeDisplay);
+            Invoke("DisableLevelLargeText", 5f);
+            Debug.Log("No More Enemies Spawning New Double Seed");
+        }
+    }
+
+    private void DisableLevelLargeText()
+    {
+        levelLargeDisplay.text = "";
+    }
+    
     public void ButtonPressed()
     {
         Debug.Log(GreenConsole("UI Button Pressed!"));
@@ -295,14 +345,23 @@ public class GameManager : MonoBehaviour
     private void ShowTutorialSpeech()
     {
         var shopkeeperMessage = "Hi warrior! Use WASD or Arrow Keys to move." +
-                                    "Use left mouse to attack. Move closer to my shop to buy war outfits";
+                                    "Use left mouse to attack. Kill enemies to get more coins.";
         TypingFunction(shopkeeperMessage, shopkeeperDialogText);
+        Invoke("ShowMoveCloseMessage", 15f);
+    }
+
+    private void ShowMoveCloseMessage()
+    {
+        var moveCloseMessage = "Walk closer to to me to Open Shopping Window.";
+        TypingFunction(moveCloseMessage, shopkeeperDialogText);
     }
 
     private void ShowDefaultSpeech()
     {
-        var shopkeeperMessage = "Hi warrior, you can visit my shop and buy incredible battle outfits";
+        var shopkeeperMessage = "Hi warrior, you can visit my shop and buy better battle outfits";
         TypingFunction(shopkeeperMessage, shopkeeperDialogText);
+        
+        Invoke("ShowMoveCloseMessage", 7f);
     }
     
     private void TypingFunction(string whatToType, TextMeshProUGUI textViewToUse)
