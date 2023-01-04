@@ -311,7 +311,7 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < Seed; ++i) SpawnEnemies();
     }
 
-    private int enemiesRemaining;
+    public int enemiesRemaining;
     public TextMeshProUGUI enemiesRemainingText, currentLevelText, levelLargeDisplay;
     public void AreThereMoreEnemies()
     {
