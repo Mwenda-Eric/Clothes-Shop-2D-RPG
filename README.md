@@ -1,5 +1,9 @@
 # Clothes Shop 2DRPG
 
+## Gameplay Video
+
+https://user-images.githubusercontent.com/121701639/212549391-16639f3c-b48d-4892-a3c6-289e7e2dac64.mp4
+
 ## Game Mechanics
 
 On the first launch of the game, the player is given a couple instructions on how the game works. Here are the game controls.
