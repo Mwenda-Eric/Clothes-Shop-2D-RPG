@@ -25,6 +25,5 @@ When the player has enough coins, they can now buy different outfits to increase
 
 When the player fights all the enemies around the scene, the game Levels Up in which now the number of enemies that the player has to fight is now doubled.
 
-Saving Outfits 
-– Once the player buys a particular outfit it is automatically saved so that they don’t struggle again gathering coins to buy the outfit.
+Saving Outfits – Once the player buys a particular outfit it is automatically saved so that they don’t struggle again gathering coins to buy the outfit.
 - When the player also exits the game, the last purchased and worn outfit is saved so that when the player resumes the game at a later time, they will start the game with the last worn outfit.
