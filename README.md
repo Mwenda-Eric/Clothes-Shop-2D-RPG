@@ -5,7 +5,7 @@
 https://user-images.githubusercontent.com/121701639/212549391-16639f3c-b48d-4892-a3c6-289e7e2dac64.mp4
 
 ## Windows Executable Download
-You can download the game for windows [HERE]()
+You can download the game for windows [HERE](https://drive.google.com/file/d/1fUyKnu8mXoSnRKdqzF3y3BvXmBueW1uQ)
 
 ## Game Mechanics
 
