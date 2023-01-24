@@ -9,7 +9,7 @@ You can download the game for windows [HERE](https://drive.google.com/file/d/1fU
 
 ## Game Mechanics
 
-On the first launch of the game, the player is given a couple instructions on how the game works. Here are the game controls.
+On the first launch of the game, the player is given a couple instructions on how the game works. Here are the game controls..
 
 - W-A-S-D or Arrow Keys – Used for movement of the player around the game world.
 - Left Mouse Button – Used to attack enemies.
